@@ -8,13 +8,13 @@ test('simple subscription', () => {
 
     observable.subscribe({
         next(x) {
-            expect(x).toBe(__)
+            expect(x).toBe(42)
         }
     })
 })
 
 test('what comes in goes out', () => {
-    const observable = new Observable((subscriber) => subscriber.next(__))
+    const observable = new Observable((subscriber) => subscriber.next(101))
     observable.subscribe({
         next(x) {
             expect(x).toBe(101)
@@ -24,7 +24,7 @@ test('what comes in goes out', () => {
 
 test('this is the same as an event stream', () => {
     const events = new Subject<number>()
-    events.subscribe((x) => expect(x).toBe(__))
+    events.subscribe((x) => expect(x).toBe(42))
     events.next(42)
 })
 
@@ -35,8 +35,7 @@ test('how event streams relate to observables', () => {
     let eventStreamResult = 1
     const events = new Subject<number>()
     events.subscribe((x) => eventStreamResult = x)
-    
-    //events.__(73)
+    events.next(73)
 
     expect(observableresult).toBe(eventStreamResult)
 })
@@ -51,7 +50,7 @@ test('event streams have multiple results', () => {
     events.next(10)
     events.next(7)
 
-    expect(eventStreamResult).toBe(__)
+    expect(eventStreamResult).toBe(17)
 })
 
 test('simple return', () => {
@@ -62,7 +61,7 @@ test('simple return', () => {
     observable.subscribe((x) => {
         received = x
     })
-    expect(received).toBe(__)
+    expect(received).toBe('foo')
 })
 
 test('the last event', () => {
@@ -72,7 +71,7 @@ test('the last event', () => {
     from(names).subscribe((x) => {
         received = x
     })
-    expect(received).toBe(__)
+    expect(received).toBe('bar')
 })
 
 test('everything counts', () => {
@@ -80,7 +79,7 @@ test('everything counts', () => {
     const numbers = [3, 4]
     from(numbers).subscribe(x => received += x)
 
-    expect(received).toBe(__)
+    expect(received).toBe(7)
 })
 
 test('this is still an event stream', () => {
@@ -91,7 +90,7 @@ test('this is still an event stream', () => {
     numbers.next(10)
     numbers.next(5)
 
-    expect(received).toBe(__)
+    expect(received).toBe(15)
 })
 
 test('all events will be received', () => {
@@ -100,7 +99,7 @@ test('all events will be received', () => {
 
     from(numbers).subscribe(x => received += ` ${x}`)
 
-    expect(received).toBe(__)
+    expect(received).toBe('Working 9 10 11 12 13')
 })
 
 test('do things in the middle', () => {
@@ -108,7 +107,7 @@ test('do things in the middle', () => {
     const daysTilTest = from(range(1, 4))
 
     daysTilTest.pipe(tap(
-        (d) => status.push(`${5 - d}=${5 - d === 1 ? 'Study Like Mad' : __}`)
+        (d) => status.push(`${5 - d}=${5 - d === 1 ? 'Study Like Mad' : 'Party'}`)
     )).subscribe()
 
     expect(status.toString()).toBe('4=Party,3=Party,2=Party,1=Study Like Mad')
@@ -121,7 +120,7 @@ test('nothing listens until you subscribe', () => {
 
     expect(sum).toBe(0)
 
-    //observable.__()
+    observable.subscribe()
 
     expect(sum).toBe(1 + 2 + 3 + 4 + 5)
 })
@@ -139,7 +138,7 @@ test('events before you subscribe do not count', () => {
     numbers.next(3)
     numbers.next(4)
 
-    expect(sum).toBe(__)
+    expect(sum).toBe(7)
 })
 
 test('events after you unsubcribe dont count', () => {
@@ -156,7 +155,7 @@ test('events after you unsubcribe dont count', () => {
     numbers.next(3)
     numbers.next(4)
 
-    expect(sum).toBe(__)
+    expect(sum).toBe(3)
 })
 
 test('events while subscribing', () => {
@@ -177,5 +176,5 @@ test('events while subscribing', () => {
     
     words.next('ugly')
 
-    expect(received.join(' ')).toBe(__)
+    expect(received.join(' ')).toBe('you look pretty')
 })
