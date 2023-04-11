@@ -1,7 +1,6 @@
 import { bufferCount, filter, fromEvent, map, range, toArray } from "rxjs";
 import { expect, test } from "vitest";
 import { EventEmitter } from 'events'
-import { A } from "vitest/dist/types-94cfe4b4";
 
 const __: any = 'Fill in the blank'
 
